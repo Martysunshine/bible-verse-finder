@@ -8,10 +8,11 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 EMB_PATH = os.path.join(DATA_DIR, 'verses.npy')
 META_PATH = os.path.join(DATA_DIR, 'meta.json')
 
-# Ensure artifacts exist; if not, build
-if not (os.path.exists(EMB_PATH) and os.path.exists(META_PATH)):
-	import subprocess, sys
-	subprocess.check_call([sys.executable, os.path.join(os.path.dirname(__file__), 'prepare_bible.py')])
+# Optionally auto-build artifacts
+AUTO_BUILD = os.getenv('AUTO_BUILD_EMBEDS', '1') != '0'
+if AUTO_BUILD and not (os.path.exists(EMB_PATH) and os.path.exists(META_PATH)):
+        import subprocess, sys
+        subprocess.check_call([sys.executable, os.path.join(os.path.dirname(__file__), 'prepare_bible.py')])
 
 # Load data
 emb = np.load(EMB_PATH)

@@ -113,6 +113,12 @@ Backend (Render)
 - Build: `pip install -r requirements.txt && python prepare_bible.py`
 - Start: `uvicorn app:app --host 0.0.0.0 --port $PORT`
 
+Backend (Vercel)
+- Root: `backend/`
+- Build: `pip install -r requirements.txt && python prepare_bible.py`
+- Env: `AUTO_BUILD_EMBEDS=0`
+- Start: `uvicorn app:app --host 0.0.0.0 --port $PORT`
+
 Frontend (Vercel)
 - Root: `frontend/`
 - Env: `VITE_API_BASE=https://YOUR-BACKEND.onrender.com`
