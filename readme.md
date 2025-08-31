@@ -50,7 +50,11 @@ pip install -r requirements.txt
 # Build embeddings once (first run will download models and take a few minutes)
 python prepare_bible.py
 
-# Start API
+# Start API (reranker disabled by default)
+uvicorn app:app --reload --port 8000
+
+# Enable Cross-Encoder reranker when memory allows
+$env:ENABLE_RERANKER=1
 uvicorn app:app --reload --port 8000
 ```
 
@@ -136,5 +140,5 @@ Notes
 -----
 
 - Works offline after first model download and embedding build.
-- Optional reranker improves precision; if loading fails (low RAM), it falls back automatically.
+- Optional reranker (Cross-Encoder) is disabled by default to save memory. Set `ENABLE_RERANKER=1` before starting the server to enable it when enough RAM is available; if loading fails, it falls back automatically.
 - To index paragraphs instead of verses, preprocess the CSV to paragraph rows and re-run `prepare_bible.py`.
