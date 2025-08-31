@@ -31,13 +31,14 @@ from sentence_transformers import SentenceTransformer
 EMB_MODEL = 'sentence-transformers/all-MiniLM-L6-v2'
 encoder = SentenceTransformer(EMB_MODEL)
 
-# Optional reranker
+# Optional reranker (disabled by default)
 RERANKER = None
-try:
-	from sentence_transformers import CrossEncoder
-	RERANKER = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
-except Exception:
-	RERANKER = None
+if os.getenv('ENABLE_RERANKER', '').lower() in ('1', 'true', 'yes'):
+        try:
+                from sentence_transformers import CrossEncoder
+                RERANKER = CrossEncoder('cross-encoder/ms-marco-MiniLM-L-6-v2')
+        except Exception:
+                RERANKER = None
 
 # Minimal stopwords for quick keyword overlap
 STOP = set('''a an and are as at be but by for from has have i in is it its nor not of on or so that the their there these this to was were will with your you're you'''.split())
