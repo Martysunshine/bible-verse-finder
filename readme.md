@@ -170,3 +170,32 @@ Notes
 - Works offline after first model download and embedding build.
 - Optional reranker (Cross-Encoder) loads automatically if available; if loading fails due to memory or dependencies, the API falls back to semantic-only ranking.
 - To index paragraphs instead of verses, preprocess the CSV to paragraph rows and re-run `prepare_bible.py`.
+
+
+
+
+
+
+
+
+How to run (copied from README):
+
+_________________________________________________________________
+Backend
+-------------------------------
+python -m venv .venv
+. .\.venv\Scripts\Activate.ps1
+pip install -r backend\requirements.txt
+python backend\prepare_bible.py
+python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+
+_________________________________________________________________
+Frontend
+-----------------------------
+cd frontend
+$env:VITE_API_BASE='http://127.0.0.1:8000'
+npm install
+npm run dev
+
+
+Open http://localhost:5173
