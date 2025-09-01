@@ -3,6 +3,30 @@ BibleVerse Finder
 
 Given a 10+ word description, this app suggests 3–5 relevant Bible passages using local Sentence-Transformers embeddings and an optional Cross-Encoder reranker. No paid APIs.
 
+Quickstart (Windows PowerShell)
+-------------------------------
+
+```pwsh
+# From the repo root
+python -m venv .venv
+. .\.venv\Scripts\Activate.ps1
+pip install -r backend\requirements.txt
+
+# Build embeddings once (first run downloads models and can take a few minutes)
+python backend\prepare_bible.py
+
+# Start the API
+python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+
+# In a new terminal: start the UI
+cd frontend
+$env:VITE_API_BASE='http://127.0.0.1:8000'
+npm install
+npm run dev
+```
+
+Open http://localhost:5173, enter 10+ words, then click “Suggest Passages”.
+
 Project structure
 -----------------
 
@@ -39,23 +63,18 @@ Prerequisites
 Backend (FastAPI)
 -----------------
 
-Windows PowerShell:
-
 ```pwsh
-cd backend
-python -m venv .venv
-. .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
+# From the repo root
+. .\.venv\Scripts\Activate.ps1
+pip install -r backend\requirements.txt
 
 # Build embeddings once (first run will download models and take a few minutes)
-python prepare_bible.py
+python backend\prepare_bible.py
 
-# Start API (reranker disabled by default)
-uvicorn app:app --reload --port 8000
-
-# Enable Cross-Encoder reranker when memory allows
-$env:ENABLE_RERANKER=1
-uvicorn app:app --reload --port 8000
+# Start API (use --reload during development if preferred)
+python -m uvicorn backend.app:app --host 127.0.0.1 --port 8000
+# or with reload:
+# python -m uvicorn backend.app:app --reload --port 8000
 ```
 
 Sanity checks (new terminal):
@@ -142,9 +161,12 @@ Troubleshooting
 - Slow first run
 	- Models download on first use; embeddings build can take a few minutes.
 
+- Python 3.13 + pandas
+	- No action required. The backend does not depend on pandas for runtime; `prepare_bible.py` reads CSV with the stdlib `csv` module.
+
 Notes
 -----
 
 - Works offline after first model download and embedding build.
-- Optional reranker (Cross-Encoder) is disabled by default to save memory. Set `ENABLE_RERANKER=1` before starting the server to enable it when enough RAM is available; if loading fails, it falls back automatically.
+- Optional reranker (Cross-Encoder) loads automatically if available; if loading fails due to memory or dependencies, the API falls back to semantic-only ranking.
 - To index paragraphs instead of verses, preprocess the CSV to paragraph rows and re-run `prepare_bible.py`.
