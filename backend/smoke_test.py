@@ -1,8 +1,10 @@
 """
 Quick smoke test: import recommend() and run a sample query, printing top results.
-Run with the project venv:
+Run with the project venv (example):
 
-  C:\Users\marti\Documents\GitHub\bible-verse-finder\.venv\Scripts\python.exe backend\smoke_test.py
+    C:/Users/marti/Documents/GitHub/bible-verse-finder/.venv/Scripts/python.exe backend/smoke_test.py
+
+(Forward slashes used above to avoid backslash escape issues in docstring.)
 """
 from __future__ import annotations
 
